@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.use("/customer", session({ secret: "fingerprint_customer", resave: true, saveUninitialized: true }))
 
-app.use("/customer/auth/*", function auth(req, res, next) {
+function auth(req, res, next) {
     //Write the authenication mechanism here
     const authHeader = req.headers['authorization'];
     if (!authHeader) {
@@ -30,7 +30,7 @@ app.use("/customer/auth/*", function auth(req, res, next) {
         req.user = user; //* Store the user object in the request object
         next();
     });
-});
+};
 
 app.use("/customer/auth/*", auth); //* Apply the auth middleware
 
