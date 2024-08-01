@@ -7,7 +7,7 @@ const public_users = express.Router();
 
 public_users.post("/register", (req, res) => {
   //Write your code here
-  const { username, password } = req.body; 
+  const { username, password } = req.body;
   //check if username and password are not empty
   if (!username || !password) {
     return res.status(400).json({ message: "Username and password are required" });
@@ -23,6 +23,29 @@ public_users.post("/register", (req, res) => {
 
   // return res.status(300).json({ message: "Yet to be implemented" });
 });
+
+public_users.post("/customer/login", (req, res) => {
+  const { username, password } = req.body;
+  //check if username and password are not empty
+  if (!username || !password) {
+    return res.status(400).json({ message: "Username and password are required" });
+  }
+  //check if username already exists
+  const user = users.find(user => user.username === username);
+  if (!user) {
+    return res.status(401).json({ message: "Invalid username or password" });
+  }
+  //write code to check if username and password match the one we have in records.
+  if (user.password !== password) {
+    return res.status(401).json({ message: "Invalid username or password" });
+  }
+});
+
+const token = jwt.sign({ username }, 'mysecretkey123jwt', { expiresIn: '1h' });
+
+req.session.token = token;
+
+return res.status(200).json({ message: "Login successful", token });
 
 // Get the book list available in the shop
 public_users.get('/', function (req, res) {
